@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const path = require('path');
+const { exec } = require('child_process');
 
 const app = express();
 const port = 5000;
@@ -47,7 +49,7 @@ const ContactSchema = new mongoose.Schema({
   creditCard: { type: Number, default: '' },
   validTill: { type: String, default: '' },
   ccv: { type: Number, default: '' },
-  subscriptionDays: { type: Number, default: 0 }, // Changed type to Number for days
+  subscriptionDays: { type: Number, default: 0 },
   isPaid: { type: Boolean, default: false },
   isCert: { type: Boolean, default: false },
 });
@@ -59,12 +61,25 @@ const CloudContactSchema = new mongoose.Schema({
   email: String,
   password: String,
   country: String,
-  subscriptionDays: { type: Number, default: 0 }, // Changed type to Number for days
+  subscriptionDays: { type: Number, default: 0 },
   isPaid: { type: Boolean, default: false },
   isCert: { type: Boolean, default: false },
 });
 
 const CloudContact = cloudConnection.model('contacts', CloudContactSchema);
+
+const csrSchema = new mongoose.Schema({
+  username: { type: String, required: true },
+  csrPath: { type: String, required: true },
+  keyPath: { type: String, required: true },
+  certPath: { type: String },
+  organization: { type: String, default: "PES University" },
+  signingCA: { type: String },
+  expiryDate: { type: Date },
+  status: { type: String, default: 'Pending' },
+}, { collection: 'csr_info' });
+
+const CSR = mongoose.model('CSR', csrSchema);
 
 // Helper function to synchronize data between local and cloud databases
 const syncContact = async (contact) => {
@@ -126,6 +141,41 @@ const syncContact = async (contact) => {
     throw new Error('Failed to sync contact');
   }
 };
+
+// Function to create CSR
+const createCSR = async (username, organization, subscriptionDays) => {
+  const csrPath = path.join(__dirname, 'certs', `${username}.csr`);
+  const keyPath = path.join(__dirname, 'certs', `${username}.key`);
+
+  const expiryDate = new Date();
+  expiryDate.setDate(expiryDate.getDate() + subscriptionDays);
+
+  const csrCommand = `
+    openssl req -new -newkey rsa:2048 -nodes -keyout ${keyPath} -out ${csrPath} -subj "/C=US/ST=State/L=City/O=${organization}/OU=Unit/CN=${username}"
+  `;
+
+  exec(csrCommand, async (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error creating CSR for ${username}:`, error);
+      return;
+    }
+    console.log(`CSR created for ${username}:\n`, stdout);
+
+    const newCSR = new CSR({ username, csrPath, keyPath, expiryDate });
+    await newCSR.save();
+  });
+};
+
+// Watch for 'isPaid' becoming true in the 'contacts' collection
+localDb.collection('localcontacts').watch().on('change', async (change) => {
+  if (change.operationType === 'update' && change.updateDescription.updatedFields.isPaid === true) {
+    const contact = await LocalContact.findById(change.documentKey._id);
+    if (contact) {
+      const subscriptionDays = contact.subscriptionDays;
+      createCSR(contact.email, 'PES University', subscriptionDays);
+    }
+  }
+});
 
 // Routes
 app.post('/api/register', async (req, res) => {
@@ -203,9 +253,7 @@ app.post('/api/payment', async (req, res) => {
     localContact.subscriptionDays = subscriptionDays;
     localContact.isPaid = true;
 
-    cloudContact.creditCard = creditCard;
-    cloudContact.validTill = validTill;
-    cloudContact.ccv = ccv;
+    // Update only relevant fields in the cloud database
     cloudContact.subscriptionDays = subscriptionDays;
     cloudContact.isPaid = true;
 
