@@ -1,0 +1,105 @@
+.browse {
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 0 10px; /* Add some padding to avoid content touching the edge */
+}
+
+.browse .BrowseTitle {
+  font-family: cursive;
+  font-size: 60px;
+}
+
+.search-bar {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.search-bar input {
+  padding: 10px 10px 10px 40px;
+  font-size: 16px;
+  width: 300px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  color: #aaa;
+}
+
+.BrowseList {
+  width: 100%;
+  max-width: 1200px; /* Limit the maximum width */
+  height: auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px; /* Add gap between grid items */
+  padding: 0 20px; /* Add padding to the grid container */
+  box-sizing: border-box; /* Include padding in the element's total width and height */
+}
+
+.BrowseItem {
+  border-radius: 15px;
+  width: 100%; /* Ensure the BrowseItem takes the full width of its grid cell */
+  max-width: 300px; /* Optional: limit the max width if needed */
+  height: 350px;
+  margin: 20px;
+  box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+}
+
+.BrowseItem:hover {
+  box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.5);
+  transition: 0.3s ease-in;
+  cursor: pointer;
+}
+
+.BrowseItem div {
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  width: 100%;
+  height: 200px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.BrowseItem h1,
+.BrowseItem p {
+  margin-left: 20px;
+}
+
+@media only screen and (max-width: 1300px) {
+  .BrowseList {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .BrowseList {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .BrowseList {
+    grid-template-columns: 1fr;
+  }
+}
+
+.show-detail {
+  text-align: center;
+  padding: 20px;
+}
+
+.show-detail img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+}

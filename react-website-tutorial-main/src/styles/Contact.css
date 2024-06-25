@@ -1,0 +1,126 @@
+.contact {
+  width: 100%;
+  height: 100vh; /* Full viewport height */
+  display: flex;
+}
+
+.contact .leftSide {
+  flex: 1;
+  background-image: url('../assets/register.jpg'); /* Add your image path */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.contact .rightSide {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.contact .rightSide h1 {
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", Arial, sans-serif;
+  font-weight: bold;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 400px;
+}
+
+.form-group {
+  margin-bottom: 0.5rem;
+}
+
+form input,
+form select,
+form textarea {
+  height: 2rem;
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  margin-bottom: 0.5rem;
+}
+
+input::placeholder,
+textarea::placeholder {
+  font-weight: bold;
+  color: black;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form input:focus,
+textarea:focus {
+  outline: none;
+}
+
+form label {
+  margin-bottom: 0.25rem;
+  color: grey;
+  font-weight: bold;
+}
+
+form button {
+  width: 100%;
+  height: 2.5rem;
+  border: none;
+  background-color: #007BFF;
+  color: whitesmoke;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-top: 0.5rem;
+}
+
+form button:hover {
+  background-color: #0056b3;
+}
+
+.link-button {
+  background: none;
+  color: blue;
+  border: none;
+  padding: 0;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+.link-button:focus,
+.link-button:active {
+  outline: none;
+  color: blue;
+}
+
+.link-button:hover {
+  color: darkblue;
+  background: none;
+}
+
+@media (max-width: 768px) {
+  .contact {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .contact .leftSide {
+    height: 50vh; /* Adjust height for smaller screens */
+  }
+
+  .contact .rightSide {
+    height: auto;
+    padding: 1rem;
+  }
+}

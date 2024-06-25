@@ -1,0 +1,56 @@
+.BrowseItem {
+    width: auto; /* Let the box size itself to its content */
+    height: auto; /* Let the height adjust based on content */
+    padding: 10px; /* Adjust padding as necessary */
+    margin: 10px; /* Adjust margin as necessary */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .item-content {
+    flex: 1; /* Allow item-content to expand */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .item-image {
+    flex-shrink: 0; /* Ensure image does not shrink */
+    height: 200px; /* Set a fixed height for image */
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .BrowseItem h1 {
+    font-size: 20px;
+    margin-bottom: 5px;
+  }
+  
+  .BrowseItem p {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #666;
+    margin-bottom: 10px;
+  }
+  
+  .rating {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center stars horizontally */
+    color: #f9a825; /* Golden color for stars */
+    margin-top: auto; /* Push stars to the bottom */
+  }
+  
+  .rating svg {
+    width: 20px;
+    height: 20px;
+    margin-left: 5px; /* Adjust spacing between text and stars */
+  }
+  

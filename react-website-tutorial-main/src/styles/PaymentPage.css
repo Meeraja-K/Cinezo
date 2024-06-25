@@ -1,0 +1,71 @@
+/* PaymentPage.css */
+.payment-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Make the container take the full viewport height */
+  background-color: #f1f1f1; /* Optional: background color for the full page */
+}
+
+.payment-page {
+  width: 100%;
+  max-width: 400px; /* Adjusted max-width to fit the content better */
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.payment-page h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center; /* Center the heading */
+}
+
+.payment-page form {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the form elements */
+}
+
+.payment-page label {
+  margin-bottom: 8px;
+  align-self: flex-start; /* Align labels to the start */
+}
+
+.payment-page input[type="text"] {
+  width: 100%; /* Make the input fields take the full width of the form */
+  padding: 10px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.payment-page button {
+  padding: 12px 24px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.payment-page button:hover {
+  background-color: #0056b3;
+}
+
+.paid-label {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  text-align: center;
+  cursor: default;
+}
+
