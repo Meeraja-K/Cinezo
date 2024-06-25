@@ -31,7 +31,8 @@ function Browse() {
             image={item.image}
             name={item.name}
             text={item.text}
-            rating={parseFloat(item.rating)} // Pass the rating as a float
+            rating={parseFloat(item.rating)}
+            numRatings={item.numRatings} // Pass numRatings here
           />
         ))}
       </div>

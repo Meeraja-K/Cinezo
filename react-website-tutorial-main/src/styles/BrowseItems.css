@@ -43,14 +43,20 @@
   .rating {
     display: flex;
     align-items: center;
-    justify-content: center; /* Center stars horizontally */
+    justify-content: center; /* Center stars and number of ratings horizontally */
     color: #f9a825; /* Golden color for stars */
-    margin-top: auto; /* Push stars to the bottom */
+    margin-top: auto; /* Push stars and number of ratings to the bottom */
+    font-size: 14px; /* Adjust font size for number of ratings */
   }
   
   .rating svg {
     width: 20px;
     height: 20px;
-    margin-left: 5px; /* Adjust spacing between text and stars */
+    margin-right: 5px; /* Adjust spacing between stars and number of ratings */
+  }
+  
+  .num-ratings {
+    color: #999; /* Color for the number of ratings */
+    margin-left: 5px; /* Adjust spacing between stars and number of ratings */
   }
   

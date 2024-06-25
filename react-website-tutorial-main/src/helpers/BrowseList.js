@@ -23,6 +23,7 @@ export const BrowseList = [
     image: Eras,
     text: "Relive the Eras: A Journey Through Time and Music!",
     rating: "4.0",
+    numRatings: 120,
     description: <p>The "Eras Tour" movie captures the magic of Taylor Swift's 
                   monumental concert tour, showcasing her evolution as an artist 
                   through spectacular performances of her greatest hits. With a 
@@ -36,6 +37,7 @@ export const BrowseList = [
     image: Lion,
     text: "Embrace the Majesty of the Circle of Life.",
     rating: "4.5",
+    numRatings: 120,
     description: <p>"The Lion King" movie, a timeless classic, brings to life the story of 
                   Simba's journey from a carefree cub to the king of the Pride Lands, featuring 
                   breathtaking animation and an unforgettable soundtrack. With iconic songs like 
@@ -48,6 +50,7 @@ export const BrowseList = [
     image: Imitation,
     text: "Crack the Code of Brilliance.",
     rating: "4.0",
+    numRatings: 120,
     description: <p>"The Imitation Game" tells the gripping true story of Alan Turing, whose 
                   cryptographic genius was pivotal in breaking the German Enigma code during 
                   World War II, revealing both his extraordinary contributions and the personal 
@@ -61,6 +64,7 @@ export const BrowseList = [
     image: Reasons,
     text: "If you're listening, you're too late.",
     rating: "3.6",
+    numRatings: 120,
     description: <p>"13 Reasons Why" is a poignant and controversial series that explores the 
                   complexities of high school life and the impact of bullying, suicide, and 
                   mental health through the story of Hannah Baker. Through a series of tapes 
@@ -74,6 +78,7 @@ export const BrowseList = [
     image: Moana,
     text: "The ocean is calling.",
     rating: "3.5",
+    numRatings: 120,
     description: <p>"Moana 2" is highly anticipated, promising to continue the adventurous 
                   spirit of the Polynesian heroine as she embarks on new quests across the 
                   ocean. Building on the success of the original film, the sequel is expected 
@@ -86,6 +91,7 @@ export const BrowseList = [
     image: Theory,
     text: "While there's life, there is hope.",
     rating: "2.5",
+    numRatings: 120,
     description: <p>"The Theory of Everything" chronicles the life of Stephen Hawking, focusing 
                   on his groundbreaking work in physics and his relationship with his first wife, 
                   Jane, portraying his triumphs and trials amid his battle with ALS. The film 
@@ -99,6 +105,7 @@ export const BrowseList = [
     image: Groot,
     text: "I am Groot. On anyone, not just himself.",
     rating: "3.5",
+    numRatings: 120,
     description: <p>I Am Groot" delves into the lovable Guardians of the Galaxy character's adventures, 
                   offering a blend of humor and heartwarming moments. The series follows Groot's journey 
                   through various escapades in the cosmos, highlighting his endearing personality, his 
@@ -111,6 +118,7 @@ export const BrowseList = [
     image: Power,
     text: "What would you risk for 5 minutes of pure power?",
     rating: "3.0",
+    numRatings: 120,
     description: <p>"Project Power" is an action-packed film set in a world where a mysterious 
                   pill grants temporary superpowers, following a former soldier, a teen, and a 
                   cop as they team up to stop those exploiting the drug for nefarious purposes. 
@@ -124,6 +132,7 @@ export const BrowseList = [
     image: Inside,
     text: "Meet the little voices inside your head.",
     rating: "4.2",
+    numRatings: 120,
     description: <p>"Inside Out" is an imaginative exploration of the emotions inside a young 
                   girl's mind, brilliantly depicting how joy, sadness, anger, fear, and disgust 
                   influence her life. Set within the mind of 11-year-old Riley, the film uses 

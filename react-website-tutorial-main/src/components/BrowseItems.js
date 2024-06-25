@@ -5,7 +5,7 @@ import StarHalf from "@material-ui/icons/StarHalf";
 import StarBorder from "@material-ui/icons/StarBorder";
 import "../styles/BrowseItems.css"; // Import the CSS file
 
-function BrowseItems({ image, name, text, rating }) {
+function BrowseItems({ image, name, text, rating, numRatings }) {
   // Function to render star icons based on rating out of 5
   const renderStars = (rating) => {
     const stars = [];
@@ -40,7 +40,10 @@ function BrowseItems({ image, name, text, rating }) {
         <div className="item-image" style={{ backgroundImage: `url(${image})` }}></div>
         <h1>{name}</h1>
         <p>{text}</p>
-        <div className="rating">{renderStars(rating)}</div>
+        <div className="rating">
+          {renderStars(rating)}
+          <span className="num-ratings">({numRatings})</span>
+        </div>
       </div>
     </Link>
   );
