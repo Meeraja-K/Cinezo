@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const { exec } = require('child_process');
 
 const app = express();
 const port = 5000;
@@ -23,8 +24,8 @@ localDb.once('open', () => {
 });
 
 // Cloud MongoDB Connection
-const password = encodeURIComponent('xxx'); // Replace with your actual password
-const cloudUri = 'mongodb+srv://mongo:${password}@cluster0.wccrmo0.mongodb.net/netflix_dummy_server?retryWrites=true&w=majority';
+const password = encodeURIComponent('LcDL6n?&8RzY$kgJ'); // Replace with your actual password
+const cloudUri = `mongodb+srv://mongo:${password}@cluster0.wccrmo0.mongodb.net/netflix_dummy_server?retryWrites=true&w=majority`;
 
 const cloudConnection = mongoose.createConnection(cloudUri, {
   useNewUrlParser: true,
@@ -47,7 +48,7 @@ const ContactSchema = new mongoose.Schema({
   creditCard: { type: Number, default: '' },
   validTill: { type: String, default: '' },
   ccv: { type: Number, default: '' },
-  subscriptionDays: { type: Number, default: 0 }, // Changed type to Number for days
+  subscriptionDays: { type: Number, default: 0 },
   isPaid: { type: Boolean, default: false },
   isCert: { type: Boolean, default: false },
 });
@@ -59,12 +60,31 @@ const CloudContactSchema = new mongoose.Schema({
   email: String,
   password: String,
   country: String,
-  subscriptionDays: { type: Number, default: 0 }, // Changed type to Number for days
+  subscriptionDays: { type: Number, default: 0 },
   isPaid: { type: Boolean, default: false },
   isCert: { type: Boolean, default: false },
 });
 
 const CloudContact = cloudConnection.model('contacts', CloudContactSchema);
+
+// Define MongoDB Schemas and Models for CSR
+const LocalCSRSchema = new mongoose.Schema({
+  username: { type: String, required: true },
+  csrPath: { type: String, required: true },
+  keyPath: { type: String, required: true },
+  status: { type: String, default: 'Pending' },
+}, { collection: 'local_csr_info' });
+
+const LocalCSR = mongoose.model('LocalCSR', LocalCSRSchema);
+
+const CloudCSRSchema = new mongoose.Schema({
+  username: { type: String, required: true },
+  csrPath: { type: String, required: true },
+  keyPath: { type: String, required: true },
+  status: { type: String, default: 'Pending' },
+}, { collection: 'cloud_csr_info' });
+
+const CloudCSR = cloudConnection.model('cloud_csr_info', CloudCSRSchema);
 
 // Helper function to synchronize data between local and cloud databases
 const syncContact = async (contact) => {
@@ -125,6 +145,28 @@ const syncContact = async (contact) => {
     console.error('Error syncing contact:', error);
     throw new Error('Failed to sync contact');
   }
+};
+
+// Function to create a CSR using OpenSSL
+const createCSR = (email) => {
+  const csrPath = `${email}.csr`;
+  const keyPath = `${email}.key`;
+  const csrCommand = `openssl req -new -newkey rsa:2048 -nodes -keyout ${keyPath} -out ${csrPath} -subj "/C=US/ST=State/L=City/O=Organization/OU=Unit/CN=${email}"`;
+
+  exec(csrCommand, async (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error creating CSR for ${email}:`, error);
+      return;
+    }
+    console.log(`CSR created for ${email}:\n`, stdout);
+
+    // Save CSR details to both local and cloud databases
+    const newLocalCSR = new LocalCSR({ username: email, csrPath, keyPath });
+    const newCloudCSR = new CloudCSR({ username: email, csrPath, keyPath });
+
+    await newLocalCSR.save();
+    await newCloudCSR.save();
+  });
 };
 
 // Routes
@@ -210,16 +252,20 @@ app.post('/api/payment', async (req, res) => {
     cloudContact.isPaid = true;
 
     await localContact.save();
-    await syncContact(localContact); // Sync local contact to cloud
     await cloudContact.save();
+    await syncContact(localContact); // Sync local contact to cloud
 
-    res.status(200).json({ message: 'Payment information saved successfully' });
+    // Create CSR for the user upon successful payment
+    createCSR(localContact.email); // Assuming email can be used as username for CSR
+
+    res.status(200).json({ message: 'Payment information saved successfully', isPaid: true });
   } catch (err) {
     res.status(500).json({ error: 'Failed to save payment information' });
   }
 });
-
+  
 // Start server
 app.listen(port, () => {
-  console.log('Server is running on http://localhost:${port}');
+  console.log(`Server is running on http://localhost:${port}`);
 });
+
