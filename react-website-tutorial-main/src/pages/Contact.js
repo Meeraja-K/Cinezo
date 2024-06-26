@@ -6,7 +6,6 @@ import "../styles/Contact.css";
 function Contact() {
   const history = useHistory();
   const [isNewUser, setIsNewUser] = useState(true);
-
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -35,12 +34,13 @@ function Contact() {
         localStorage.setItem('userCountry', formData.country);
         if (isNewUser) {
           setIsNewUser(false); // Switch to login form
+          history.push('/contact'); // Redirect to login page
         } else {
           if (!data.isPaid) {
             alert('Please complete your subscription.');
-            history.push('/offer');
+            history.push('/offer'); // Redirect to payment page if not paid
           } else {
-            history.push('/browse');
+            history.push('/browse'); // Redirect to browse page if paid
           }
         }
       } else {
@@ -61,10 +61,7 @@ function Contact() {
 
   return (
     <div className="contact">
-      <div
-        className="leftSide"
-        style={{ backgroundImage: `url(${Power})` }}
-      ></div>
+      <div className="leftSide" style={{ backgroundImage: `url(${Power})` }}></div>
       <div className="rightSide">
         <h1>{isNewUser ? 'Register' : 'Login'}</h1>
         <form id="contact-form" onSubmit={handleSubmit}>
@@ -118,10 +115,7 @@ function Contact() {
         </form>
         <span>
           {isNewUser ? 'Already have an account? ' : 'New user? '}
-          <button
-            className="link-button"
-            onClick={() => setIsNewUser(!isNewUser)}
-          >
+          <button className="link-button" onClick={() => setIsNewUser(!isNewUser)}>
             {isNewUser ? 'Login' : 'Register'}
           </button>
         </span>

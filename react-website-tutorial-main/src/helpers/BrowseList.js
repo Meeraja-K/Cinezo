@@ -30,7 +30,7 @@ export const BrowseList = [
                   blend of stunning visuals, behind-the-scenes footage, and powerful 
                   live renditions, the film immerses viewers in the full concert 
                   experience, celebrating Swift's artistic journey and connection with her fans.</p>,
-    videoUrl: ErasVideo,
+    videoUrl: "ErasVideo",
   },
   {
     name: "The Lion King",
