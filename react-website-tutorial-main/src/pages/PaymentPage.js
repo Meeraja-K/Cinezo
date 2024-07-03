@@ -76,7 +76,7 @@ function PaymentPage() {
         setIsPaid(true);
         setTimeout(() => {
           setIsPaid(false);
-          history.push('/browse'); // Redirect to browse page after 10 seconds
+          history.push('/login'); // Redirect to login page after 10 seconds
         }, 10000); // 10000 milliseconds = 10 seconds
       } else {
         alert("Payment failed. Please try again.");

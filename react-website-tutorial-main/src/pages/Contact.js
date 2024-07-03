@@ -34,13 +34,13 @@ function Contact() {
         localStorage.setItem('userCountry', formData.country);
         if (isNewUser) {
           setIsNewUser(false); // Switch to login form
-          history.push('/contact'); // Redirect to login page
+          history.push('/PaymentPage'); // Redirect to payment page
         } else {
           if (!data.isPaid) {
             alert('Please complete your subscription.');
             history.push('/offer'); // Redirect to payment page if not paid
           } else {
-            history.push('/browse'); // Redirect to browse page if paid
+            history.push('/contact'); // Redirect to login page if paid
           }
         }
       } else {
