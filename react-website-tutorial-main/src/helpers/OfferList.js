@@ -1,5 +1,13 @@
 export const OfferList = [
     {
+      name: "1 Day Subscription",
+      price: 4.99,
+    },
+    {
+      name: "1 Week Subscription",
+      price: 14.99,
+    },
+    {
       name: "1 Month Subscription",
       price: 49.99,
     },

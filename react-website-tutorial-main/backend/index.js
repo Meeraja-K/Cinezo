@@ -23,7 +23,7 @@ const cloudConnection1 = mongoose.createConnection(cloudUri1, {
 
 cloudConnection1.on('error', console.error.bind(console, 'Cloud MongoDB connection 1 error:'));
 cloudConnection1.once('open', () => {
-  console.log('Connected to Cloud MongoDB');
+  console.log('Connected to Cloud MongoDB 1');
 });
 
 // Cloud MongoDB Connection 2 (Existing Cloud Database)
@@ -41,12 +41,12 @@ cloudConnection2.once('open', () => {
 });
 
 // Define MongoDB Schemas and Models
-const ContactSchema = new mongoose.Schema({
+const contactSchema = new mongoose.Schema({
   name: String,
   email: String,
   password: String,
   gender: String,
-  country: {type: String, default: ''},
+  country: { type: String, default: '' },
   age: String,
   creditCard: { type: Number, default: '' },
   validTill: { type: String, default: '' },
@@ -56,35 +56,76 @@ const ContactSchema = new mongoose.Schema({
   isCert: { type: Boolean, default: false },
 });
 
-const CloudContact1 = cloudConnection1.model('contacts', ContactSchema);
+const Contact = cloudConnection1.model('contacts', contactSchema);
+
+const certificateSchema = new mongoose.Schema({
+  commonName: { type: String, required: true },
+  certificate: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'ca_files',
+    required: true,
+  },
+  issuedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'certificateauthorities',
+    required: true,
+  },
+  ca: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'certificateauthorities',
+    required: true,
+  },
+  username: { type: String, required: true },
+  csrId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'cloud_csr_info',
+    required: true,
+  },
+  country: { type: String, required: true },
+  dateAuthorized: { type: Date, default: Date.now },
+  publicKey: { type: String, required: true },
+  subscriptionDays: { type: Number, required: true },
+  expiryDate: { type: Date, required: true },
+});
+
+const Certificate = cloudConnection2.model('certificates', certificateSchema);
+
+const certificateAuthoritySchema = new mongoose.Schema({
+  commonName: { type: String, required: true },
+  certificate: { type: mongoose.Schema.Types.ObjectId, ref: 'File' },  // Store ObjectId of .crt file in GridFS
+  key: { type: mongoose.Schema.Types.ObjectId, ref: 'File' },  // Store ObjectId of .key file in GridFS
+  srl: { type: mongoose.Schema.Types.ObjectId, ref: 'File' },
+});
+
+const CertificateAuthority = cloudConnection2.model('certificateauthorities', certificateAuthoritySchema);
 
 // Define MongoDB Schemas and Models for CSR
-const CSRSchema = new mongoose.Schema({
+const csrSchema = new mongoose.Schema({
   username: { type: String, required: true },
   csrPath: { type: String, required: true },
   keyPath: { type: String, required: true },
   organization: { type: String, default: 'Cinezo' },
   subscriptionDays: { type: Number },
-  country: { type: String},
+  country: { type: String },
   status: { type: String, default: 'Pending' },
   publicKey: { type: String, required: true },
 }, { collection: 'cloud_csr_info' });
 
-const CloudCSR1 = cloudConnection1.model('cloud_csr_info', CSRSchema);
-const CloudCSR2 = cloudConnection2.model('cloud_csr_info', CSRSchema);
+const CSR1 = cloudConnection1.model('cloud_csr_info', csrSchema);
+const CSR2 = cloudConnection2.model('cloud_csr_info', csrSchema);
 
 // Define MongoDB Schemas and Models for CSR details
-const CSRDetailSchema = new mongoose.Schema({
+const csrDetailSchema = new mongoose.Schema({
   username: { type: String, required: true },
   csrContent: { type: String, required: true },
-  keyContent: { type: String, required: true },
-  pubKeyContent: { type: String},
+  keyContent: { type: String },
+  pubKeyContent: { type: String },
 }, { collection: 'csr_details' });
 
-const CloudCSRDetail = cloudConnection1.model('csr_details', CSRDetailSchema);
+const CSRDetail = cloudConnection1.model('csr_details', csrDetailSchema);
 
 // Function to create a CSR using OpenSSL with additional details
-const createCSR = (email, organization, subscriptionDays, country) => {
+const createCSR = async (email, organization, subscriptionDays, country) => {
   console.log(`Creating CSR for: ${email}, Organization: ${organization}, SubscriptionDays: ${subscriptionDays}, Country: ${country}`);
   const csrPath = path.join(__dirname, 'csr_details', `${email}.csr`);
   const keyPath = path.join(__dirname, 'csr_details', `${email}.key`);
@@ -120,12 +161,12 @@ const createCSR = (email, organization, subscriptionDays, country) => {
       });
 
       // Save CSR details to both cloud databases
-      const newCloudCSR1 = new CloudCSR1({ username: email, csrPath, keyPath, organization, subscriptionDays, country, publicKey });
-      const newCloudCSR2 = new CloudCSR2({ username: email, csrPath, keyPath, organization, subscriptionDays, country, publicKey });
+      const newCSR1 = new CSR1({ username: email, csrPath, keyPath, organization, subscriptionDays, country, publicKey });
+      const newCSR2 = new CSR2({ username: email, csrPath, keyPath, organization, subscriptionDays, country, publicKey });
 
       try {
-        await newCloudCSR1.save();
-        await newCloudCSR2.save();
+        await newCSR1.save();
+        await newCSR2.save();
         console.log('CSR details saved to databases successfully.');
 
         // Also save CSR locally
@@ -151,8 +192,8 @@ const createCSR = (email, organization, subscriptionDays, country) => {
         const pubKeyContent = fs.readFileSync(publicKeyPath, 'utf8');
 
         // Save CSR details including file content to cloud database 1
-        const newCloudCSRDetail = new CloudCSRDetail({ username: email, csrContent, keyContent, pubKeyContent });
-        await newCloudCSRDetail.save();
+        const newCSRDetail = new CSRDetail({ username: email, csrContent, keyContent, pubKeyContent });
+        await newCSRDetail.save();
         console.log('CSR files saved to csr_details collection in Cloud MongoDB 1.');
 
       } catch (err) {
@@ -161,15 +202,16 @@ const createCSR = (email, organization, subscriptionDays, country) => {
     });
   });
 };
+
 // Routes
 app.post('/api/register', async (req, res) => {
   const { name, email, password, gender, country, age } = req.body;
   try {
-    const existingContact = await CloudContact1.findOne({ email });
+    const existingContact = await Contact.findOne({ email });
     if (existingContact) {
-      return res.status(409).json({ error: 'Email is already registered' });
+      return res.status(409).json({ error: 'Email is already registered', redirect: true });
     }
-    const newContact = new CloudContact1({ name, email, password, gender, country, age });
+    const newContact = new Contact({ name, email, password, gender, country, age });
     await newContact.save();
     res.status(201).json({ message: 'Registration successful' });
   } catch (err) {
@@ -180,7 +222,7 @@ app.post('/api/register', async (req, res) => {
 app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
   try {
-    const contact = await CloudContact1.findOne({ email, password });
+    const contact = await Contact.findOne({ email, password });
     if (!contact) {
       return res.status(404).json({ error: 'Invalid email or password' });
     }
@@ -197,7 +239,7 @@ app.post('/api/login', async (req, res) => {
 app.post('/api/check-payment', async (req, res) => {
   const { email } = req.body;
   try {
-    const contact = await CloudContact1.findOne({ email });
+    const contact = await Contact.findOne({ email });
     if (!contact) {
       return res.status(404).json({ error: 'Contact not found' });
     }
@@ -212,36 +254,32 @@ app.post('/api/check-payment', async (req, res) => {
 
 // Endpoint to handle payment
 app.post('/api/payment', async (req, res) => {
-  const { email, creditCard, validTill, ccv, subscriptionDays } = req.body;
+  const { email, creditCard, validTill, ccv, subscriptionDays, organization, country } = req.body;
   try {
-    const cloudContact1 = await CloudContact1.findOne({ email });
-
-    if (!cloudContact1) {
-      return res.status(404).json({ error: 'Contact not found in one of the databases' });
+    const contact = await Contact.findOne({ email });
+    if (!contact) {
+      return res.status(404).json({ error: 'Contact not found' });
     }
 
-    if (cloudContact1.isPaid) {
+    if (contact.isPaid) {
       return res.status(400).json({ error: 'Payment already made for this email' });
     }
 
-    if (cloudContact1.subscriptionDays > 0) {
+    if (contact.subscriptionDays > 0) {
       return res.status(400).json({ error: 'You already have an ongoing subscription plan' });
     }
-    const country = cloudContact1.country;
+    const country = contact.country;
     // Assuming all validations pass, update both databases
-    cloudContact1.creditCard = creditCard;
-    cloudContact1.validTill = validTill;
-    cloudContact1.ccv = ccv;
-    cloudContact1.subscriptionDays = subscriptionDays;
-    cloudContact1.isPaid = true;
+    contact.creditCard = creditCard;
+    contact.validTill = validTill;
+    contact.ccv = ccv;
+    contact.subscriptionDays = subscriptionDays;
+    contact.isPaid = true;
 
-    // Save both contacts
-    await cloudContact1.save();
+    await contact.save();
 
-    // Create CSR for the user upon successful payment
-    createCSR(cloudContact1.email, 'Cinezo', subscriptionDays, country); // Assuming 'Cinezo' is the fixed organization name
+    createCSR(contact.email, 'Cinezo', subscriptionDays, country); 
 
-    // Respond to client after all operations complete
     res.status(200).json({ message: 'Payment information saved successfully', isPaid: true });
   } catch (err) {
     console.error('Payment process failed:', err);
@@ -249,7 +287,74 @@ app.post('/api/payment', async (req, res) => {
   }
 });
 
-// Start server
+// Endpoint to fetch profile details
+app.get('/api/profile', async (req, res) => {
+  const { email } = req.query;
+  try {
+    const contact = await Contact.findOne({ email }, 'name email gender country age subscriptionDays');
+    if (!contact) {
+      return res.status(404).json({ error: 'Profile not found' });
+    }
+
+    const certificate = await Certificate.findOne({ username: email });
+    if (!certificate) {
+      return res.status(404).json({ error: 'Certificate not found' });
+    }
+
+    // Combine profile details and expiry date
+    const profile = {
+      ...contact.toObject(), // Convert Mongoose document to plain JavaScript object
+      subscriptionExpiry: certificate.expiryDate.toISOString(),
+    };
+
+
+    res.status(200).json({ profile });
+  } catch (err) {
+    console.error('Error fetching profile:', err);
+    res.status(500).json({ error: 'Failed to fetch profile' });
+  }
+});
+
+app.post('/api/verify-certificate', async (req, res) => {
+  const { username } = req.body;
+  try {
+    const certificate = await Certificate.findOne({ username }).populate('issuedBy');
+    if (!certificate) {
+      await Contact.updateOne({ email: username }, { isCert: false });
+      await CSR1.updateOne({ username }, { status: 'Pending' });
+      await CSR2.updateOne({ username }, { status: 'Pending' });
+      return res.status(404).json({ error: 'Certificate not found', valid: false });
+    }
+    const currentTime = new Date();
+    if (currentTime > certificate.expiryDate) {
+      await Contact.updateOne({ email: username }, { isPaid: false });
+      return res.status(403).json({ error: 'Certificate has expired'});
+    }
+
+    const caName = certificate.commonName.split(' ').slice(-1)[0]; // Extract CA name from commonName
+    const ca = await CertificateAuthority.findOne({ commonName: caName });
+    if (!ca) {
+      await Contact.updateOne({ email: username }, { isCert: false });
+      await CSR1.updateOne({ username }, { status: 'Pending' });
+      await CSR2.updateOne({ username }, { status: 'Pending' });
+      return res.status(404).json({ error: 'Certificate authority not found' });
+    }
+
+    await Contact.updateOne({ email: username }, { isCert: true });
+
+    // Update cloud_csr_info's status to 'Authorized' in both databases
+    await CSR1.updateOne({ username }, { status: 'Authorized' });
+    await CSR2.updateOne({ username }, { status: 'Authorized' });
+
+    console.log('Certificate Authority and Certificate verified')
+    res.json({ message: 'Certificate Authority and Certificate verified', valid: true, certificate });
+  } catch (error) {
+    console.error('Error verifying certificate:', error);
+    res.status(500).json({ error: 'Authentication failed. Please try again later.' });
+  }
+});
+
+// Start the server
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });

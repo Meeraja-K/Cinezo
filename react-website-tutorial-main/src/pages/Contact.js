@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useUserContext } from '../helpers/UserContext';
 import Power from "../assets/register.jpg";
 import "../styles/Contact.css";
 
 function Contact() {
   const history = useHistory();
+  const { login } = useUserContext();
   const [isNewUser, setIsNewUser] = useState(true);
   const [formData, setFormData] = useState({
     name: '',
@@ -17,8 +19,6 @@ function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form data being sent:', formData);
-
     const endpoint = isNewUser ? '/api/register' : '/api/login';
     try {
       const response = await fetch(`http://localhost:5000${endpoint}`, {
@@ -30,22 +30,27 @@ function Contact() {
       });
       const data = await response.json();
       if (response.ok) {
-        alert(isNewUser ? 'Registration successful!' : 'Login successful!');
+        login(formData.email, data.isPaid); // Update context on successful login/register
         localStorage.setItem('userCountry', formData.country);
         if (isNewUser) {
-          setIsNewUser(false); // Switch to login form
-          history.push('/PaymentPage'); // Redirect to payment page
+          alert('Registration successful! Please complete your subscription.');
+          history.push('/offer');
         } else {
           if (!data.isPaid) {
-            alert('Please complete your subscription.');
-            history.push('/offer'); // Redirect to payment page if not paid
+            alert('Login successful! Please complete your subscription.');
+            history.push('/offer');
           } else {
-            history.push('/contact'); // Redirect to login page if paid
+            history.push('/profile');
           }
         }
       } else {
-        alert(data.error || 'Failed to process request.');
-        console.error('Response status:', response.status);
+        if (response.status === 409 && data.redirect) {
+          alert(data.error);
+          setIsNewUser(false);
+          history.push('/contact');
+        } else {
+          alert(data.error || 'Failed to process request.');
+        }
       }
     } catch (error) {
       console.error('Error:', error);
