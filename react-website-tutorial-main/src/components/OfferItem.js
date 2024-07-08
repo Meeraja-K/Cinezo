@@ -3,7 +3,11 @@ import { Link } from "react-router-dom";
 
 function OfferItem({ name, price, symbol }) {
   const getTypeFromName = (name) => {
-    if (name.toLowerCase().includes("month")) {
+    if (name.toLowerCase().includes("day")) {
+      return "1-day";
+    }else if (name.toLowerCase().includes("week")) {
+      return "1-week";
+    }else if (name.toLowerCase().includes("month")) {
       return "1-month";
     } else if (name.toLowerCase().includes("half year")) {
       return "half-year";

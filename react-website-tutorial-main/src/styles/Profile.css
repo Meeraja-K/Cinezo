@@ -1,0 +1,89 @@
+.profile {
+  display: flex;
+  height: 100vh;
+}
+
+.leftSide {
+  flex: 1;
+  background-size: cover;
+  background-position: center;
+}
+
+.rightSide {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 400px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+form label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+form input, form select {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+}
+
+button {
+  padding: 10px;
+  font-size: 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+span {
+  margin-top: 10px;
+}
+
+.link-button {
+  background: none;
+  color: #007bff;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.link-button:hover {
+  text-decoration: underline;
+}
+
+.profile-details {
+  text-align: left;
+}
+
+.gender-icon {
+  width: 150px;
+  height: 150px;
+  margin-bottom: 20px;
+}
+
+.logout-button {
+  margin-top: 20px;
+}

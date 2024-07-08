@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useUserContext } from '../helpers/UserContext';
 import Power from "../assets/register.jpg";
 import "../styles/Contact.css";
 
 function Contact() {
   const history = useHistory();
+  const { login } = useUserContext();
   const [isNewUser, setIsNewUser] = useState(true);
-
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -18,8 +19,6 @@ function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form data being sent:', formData);
-
     const endpoint = isNewUser ? '/api/register' : '/api/login';
     try {
       const response = await fetch(`http://localhost:5000${endpoint}`, {
@@ -31,21 +30,27 @@ function Contact() {
       });
       const data = await response.json();
       if (response.ok) {
-        alert(isNewUser ? 'Registration successful!' : 'Login successful!');
+        login(formData.email, data.isPaid); // Update context on successful login/register
         localStorage.setItem('userCountry', formData.country);
         if (isNewUser) {
-          setIsNewUser(false); // Switch to login form
+          alert('Registration successful! Please complete your subscription.');
+          history.push('/offer');
         } else {
           if (!data.isPaid) {
-            alert('Please complete your subscription.');
+            alert('Login successful! Please complete your subscription.');
             history.push('/offer');
           } else {
-            history.push('/browse');
+            history.push('/profile');
           }
         }
       } else {
-        alert(data.error || 'Failed to process request.');
-        console.error('Response status:', response.status);
+        if (response.status === 409 && data.redirect) {
+          alert(data.error);
+          setIsNewUser(false);
+          history.push('/contact');
+        } else {
+          alert(data.error || 'Failed to process request.');
+        }
       }
     } catch (error) {
       console.error('Error:', error);
@@ -61,10 +66,7 @@ function Contact() {
 
   return (
     <div className="contact">
-      <div
-        className="leftSide"
-        style={{ backgroundImage: `url(${Power})` }}
-      ></div>
+      <div className="leftSide" style={{ backgroundImage: `url(${Power})` }}></div>
       <div className="rightSide">
         <h1>{isNewUser ? 'Register' : 'Login'}</h1>
         <form id="contact-form" onSubmit={handleSubmit}>
@@ -118,10 +120,7 @@ function Contact() {
         </form>
         <span>
           {isNewUser ? 'Already have an account? ' : 'New user? '}
-          <button
-            className="link-button"
-            onClick={() => setIsNewUser(!isNewUser)}
-          >
+          <button className="link-button" onClick={() => setIsNewUser(!isNewUser)}>
             {isNewUser ? 'Login' : 'Register'}
           </button>
         </span>

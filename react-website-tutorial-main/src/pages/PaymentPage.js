@@ -9,6 +9,10 @@ function PaymentPage() {
   // Function to get subscription days from OfferList
   const getSubscriptionDays = (subscriptionType) => {
     switch (subscriptionType) {
+      case "1-day":
+        return 1;
+      case "1-week":
+        return 7;
       case "1-month":
         return 31;
       case "half-year":
@@ -76,7 +80,7 @@ function PaymentPage() {
         setIsPaid(true);
         setTimeout(() => {
           setIsPaid(false);
-          history.push('/browse'); // Redirect to browse page after 10 seconds
+          history.push('/contact'); // Redirect to browse page after 10 seconds
         }, 10000); // 10000 milliseconds = 10 seconds
       } else {
         alert("Payment failed. Please try again.");
@@ -134,6 +138,8 @@ function PaymentPage() {
           />
 
           <label htmlFor="amount">Pay ${
+            type === "1-day" ? "4.99" :
+            type === "1-week" ? "14.99" :
             type === "1-month" ? "49.99" :
             type === "half-year" ? "249.99" :
             type === "annual" ? "499.53" :
