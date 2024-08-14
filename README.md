@@ -1,19 +1,21 @@
 Cinezo is a subscription-based entertainment platform that provides users access to a wide range of movies, TV shows, and other media content. The platform is built with a focus on security and scalability, integrating advanced technologies like Public Key Infrastructure (PKI) and Zero-Knowledge Proof (ZKP) to enhance security and user privacy.
 
-    Key Objectives
+Key Objectives
 
     - Security: Implementation of advanced security protocols, including PKI and ZKP, to ensure user data privacy and secure transactions.
     - Scalability: Built with technologies that allow easy scaling to accommodate a growing user base.
     - User Experience: A sleek and intuitive interface to enhance user engagement and satisfaction.
+____________________________________________________________________________________________________________________________________________________________
 
-    Features
+Features
 
     - Subscription Management: Users can manage their subscriptions, including plan upgrades, renewals, and cancellations.
     - Secure Access: Uses PKI for certificate-based authentication and ZKP for secure verification without revealing sensitive information.
     - Content Library: A vast collection of movies and TV shows, categorized and searchable.
     - User Dashboard: Personalized user dashboard with viewing history, recommendations, and account settings.
+________________________________________________________________________________________________________________________________________________________________
 
-    Technology Stack
+Technology Stack
 
     - Backend: Express (Node.js Framework), MongoDB (NoSQL Database)
     - Frontend: React JS (JavaScript Library), CSS (Styling)
@@ -25,9 +27,9 @@ Cinezo is a subscription-based entertainment platform that provides users access
         snarkjs: For implementing ZKP
         crypto: For cryptographic operations
         fs, path: For file and path operations
+______________________________________________________________________________________________________________________________________________________________________
 
-
-    System Architecture
+System Architecture
     
     The Cinezo platform is built on a multi-tier architecture, ensuring separation of concerns and efficient management of different components:
 
@@ -37,7 +39,7 @@ Cinezo is a subscription-based entertainment platform that provides users access
     - Security Layer: Integrated PKI and ZKP mechanisms to enhance the security of user transactions and data access.
 _______________________________________________________________________________________________________________________________________________________________________
 
-    Installation
+Installation
     
     Prerequisites
 
@@ -45,6 +47,12 @@ ________________________________________________________________________________
     - MongoDB (v4 or higher)
     - Git
 
-    
+    ______________________________________________________________________________________________________________________________________________________________________
+Setup
+
+Clone the Repository
+
+    git clone https://github.com/yourusername/cinezo.git
+    cd cinezo
 
 
