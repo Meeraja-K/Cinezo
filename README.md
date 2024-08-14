@@ -35,6 +35,15 @@ Cinezo is a subscription-based entertainment platform that provides users access
     - Backend: Developed using Express, managing API requests, user authentication, and business logic.
     - Database: MongoDB is used to store user data, subscription details, and content metadata.
     - Security Layer: Integrated PKI and ZKP mechanisms to enhance the security of user transactions and data access.
+_______________________________________________________________________________________________________________________________________________________________________
+
+    Installation
+    
+    Prerequisites
+
+    - Node.js (v14 or higher)
+    - MongoDB (v4 or higher)
+    - Git
 
     
 
