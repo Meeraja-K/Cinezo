@@ -19,6 +19,10 @@ Cinezo is a subscription-based entertainment platform that provides users access
 
     Technology Stack
 
+    Backend: Express (Node.js Framework), MongoDB (NoSQL Database)
+    Frontend: React JS (JavaScript Library), CSS (Styling)
+    Security: PKI (Public Key Infrastructure), ZKP (Zero-Knowledge Proof)
+
     
 
 
