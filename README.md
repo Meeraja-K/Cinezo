@@ -6,4 +6,8 @@ Cinezo is a subscription-based entertainment platform that provides users access
     Scalability: Built with technologies that allow easy scaling to accommodate a growing user base.
     User Experience: A sleek and intuitive interface to enhance user engagement and satisfaction.
 
+    Features
+
+    
+
 
