@@ -26,6 +26,16 @@ Cinezo is a subscription-based entertainment platform that provides users access
         crypto: For cryptographic operations
         fs, path: For file and path operations
 
+
+    System Architecture
+
+The Cinezo platform is built on a multi-tier architecture, ensuring separation of concerns and efficient management of different components:
+
+    Frontend: Built using React JS, providing a dynamic and responsive user interface.
+    Backend: Developed using Express, managing API requests, user authentication, and business logic.
+    Database: MongoDB is used to store user data, subscription details, and content metadata.
+    Security Layer: Integrated PKI and ZKP mechanisms to enhance the security of user transactions and data access.
+
     
 
 
