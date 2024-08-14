@@ -15,6 +15,10 @@ Cinezo is a subscription-based entertainment platform that provides users access
     Content Library: A vast collection of movies and TV shows, categorized and searchable.
     User Dashboard: Personalized user dashboard with viewing history, recommendations, and account settings.
 
+
+
+    Technology Stack
+
     
 
 
