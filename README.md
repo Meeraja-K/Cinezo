@@ -59,33 +59,26 @@ Install Dependencies
 
     npm install
 
-    Setup Environment Variables
-Create a .env file in the root directory and configure the following variables:
-
-makefile
-
-PORT=5000
-MONGO_URI=your-mongodb-uri
-JWT_SECRET=your-jwt-secret
-
 Run the Application
 
-bash
-
     npm run dev
-
-    Access the Application
+ 
+Access the Application
+    
     Open your browser and navigate to http://localhost:5000.
 
 Usage
+    
 User Registration and Login
 
-Users can sign up and log in to their accounts using their email and password. The registration process includes certificate-based authentication for enhanced security.
+    Users can sign up and log in to their accounts using their email and password. The registration process includes certificate-based authentication for enhanced security. 
+
 Subscription Management
 
-Once logged in, users can manage their subscriptions, including selecting plans, renewing subscriptions, and canceling them.
+    Once logged in, users can manage their subscriptions, including selecting plans, renewing subscriptions, and canceling them.
+
 Browsing and Streaming
 
-Users can browse the content library, search for movies or TV shows, and start streaming with just a click.
+    Users can browse the content library, search for movies or TV shows, and start streaming with just a click.
 
 
