@@ -6,7 +6,14 @@ Cinezo is a subscription-based entertainment platform that provides users access
     Scalability: Built with technologies that allow easy scaling to accommodate a growing user base.
     User Experience: A sleek and intuitive interface to enhance user engagement and satisfaction.
 
+
+
     Features
+
+    Subscription Management: Users can manage their subscriptions, including plan upgrades, renewals, and cancellations.
+    Secure Access: Uses PKI for certificate-based authentication and ZKP for secure verification without revealing sensitive information.
+    Content Library: A vast collection of movies and TV shows, categorized and searchable.
+    User Dashboard: Personalized user dashboard with viewing history, recommendations, and account settings.
 
     
 
