@@ -75,6 +75,11 @@ Subscription Management: Once logged in, users can manage their subscriptions, i
 
 Browsing and Streaming: Users can browse the content library, search for movies or TV shows, and start streaming with just a click.
 
+___________________________________________________________________________________________________________________________________________________
+Demo:
+
+
+https://github.com/user-attachments/assets/be537aa0-3a3b-4704-bf6e-fd17020a60b2
 
 
 
